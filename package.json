@@ -1,0 +1,19 @@
+{
+  "name": "org_api",
+  "description": "",
+  "version": "0.1.0",
+  "scripts": {
+    "offline": "sls offline",
+    "test": "jest"
+  },
+  "jest": {
+    "testEnvironment": "jest-environment-serverless"
+  },
+  "dependencies": {},
+  "devDependencies": {
+    "jest": "^24.8.0",
+    "jest-environment-serverless": "^0.2.2",
+    "serverless": "^1.45.1",
+    "serverless-offline": "^5.5.0"
+  }
+}

@@ -1,0 +1,80 @@
+service: org-api # NOTE: update this with your service name
+
+provider:
+  name: aws
+  runtime: nodejs10.x
+  apiKeys:
+    - accessKey
+  iamRoleStatements:
+    - Effect: Allow
+      Action:
+        - dynamodb:DescribeTable
+        - dynamodb:Query
+        - dynamodb:Scan
+        - dynamodb:GetItem
+        - dynamodb:PutItem
+        - dynamodb:UpdateItem
+        - dynamodb:DeleteItem
+      Resource:
+        - "arn:aws:dynamodb:${self:provider.region}:*:table/organisations"
+
+functions:
+  all:
+    handler: src/handler.all
+    events:
+      - http:
+          path: /
+          method: get
+          cors: true
+          private: true
+  create:
+    handler: src/handler.create
+    events:
+      - http:
+          path: /
+          method: post
+          cors: true
+          private: true
+  read:
+    handler: src/handler.get
+    events:
+      - http:
+          path: /{id}
+          method: get
+          cors: true
+          private: true
+  update:
+    handler: src/handler.update
+    events:
+      - http:
+          path: /{id}
+          method: patch
+          cors: true
+          private: true
+  delete:
+    handler: src/handler.delete
+    events:
+      - http:
+          path: /{id}
+          method: delete
+          cors: true
+          private: true
+
+resources:
+  Resources:
+    OrganisationsTable:
+      Type: AWS::DynamoDB::Table
+      Properties:
+        TableName: "organisations"
+        AttributeDefinitions:
+          - AttributeName: orgId
+            AttributeType: S
+        KeySchema:
+          - AttributeName: orgId
+            KeyType: HASH
+        ProvisionedThroughput:
+            ReadCapacityUnits: 1
+            WriteCapacityUnits: 1
+
+plugins:
+  - serverless-offline
